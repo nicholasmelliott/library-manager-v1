@@ -17,5 +17,13 @@ router.get('/checked', function(req, res, next) {
   res.render('checked_books', {title: "Checked Out Books"});
 });
 
+router.get('/details', function(req, res, next) {
+  res.render('book_detail', {title: "Book Details"});
+});
+
+router.get('/return', function(req, res, next) {
+  res.render('return_book', {title: "Return Book"});
+});
+
 
 module.exports = router;

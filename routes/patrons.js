@@ -9,4 +9,8 @@ router.get('/new', function(req, res, next) {
   res.render('new_patron', {title: "New Patron"});
 });
 
+router.get('/details', function(req, res, next) {
+  res.render('patron_detail', {title: "Patron's Details"});
+});
+
 module.exports = router;
