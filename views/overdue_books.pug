@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1 Overdue Books
+  include book_header.pug
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Genre
+        th Year Released
+    tbody
+      each loan in loans
+        tr
+          td
+            a(href=`/books/details/${loan.book_id}`)= loan.books.title
+          td= loan.books.author
+          td= loan.books.genre
+          td= loan.books.first_published
+      

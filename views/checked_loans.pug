@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1 Checked Out Books
+  include loan_header.pug
+  table
+    thead
+      tr
+        th Book
+        th Patron 
+        th Loaned on
+        th Return by 
+        th Returned on
+        th Action
+    tbody
+      each loan in loans
+        tr
+          td
+            a(href=`/books/details/${loan.book_id}`)= loan.books.title
+          td
+            a(href=`/patrons/details/${loan.patron_id}`)= loan.patrons.first_name + " " + loan.patrons.last_name
+          td= loan.loaned_on
+          td= loan.return_by
+          td= loan.returned_on
+          td
+            a.button(href='return_book.html') Return Book
+      
