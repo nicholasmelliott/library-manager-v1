@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Patrons.associate = function(models) {
     // associations can be defined here
-    Patrons.hasOne(models.Loans, { foreignKey: 'patron_id' });
+    
   };
   return Patrons;
 };

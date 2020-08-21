@@ -80,12 +80,27 @@ router.get("/details/:id", function(req, res, next){
   });
 });
 
-// router.get('/details', function(req, res, next) {
-//   res.render('book_detail', {title: "Book Details"});
-// });
-
-router.get('/return', function(req, res, next) {
-  res.render('return_book', {title: "Return Book"});
+// Return book page
+router.get('/return/:id', function(req, res, next) {
+  Books.findByPk(req.params.id).then(function(books){
+    Loans.findAll({
+      where: {
+        book_id: books.id
+      }, 
+      order: [["book_id", "DESC"]],
+      include: [
+      {
+          association: "books",
+          attributes: ["title"]
+      },
+      {
+        association: "patrons",
+        attributes: ["first_name", "last_name"]
+      }
+    ]}).then(function(loans){
+      res.render('return_book', {loans: loans, title: "Return Book"});
+    });
+  });
 });
 
 
