@@ -57,6 +57,15 @@ router.get('/checked', function(req, res, next) {
   });
 });
 
+//Update book
+router.put('/details/:id', function(req, res, next){
+  Books.findByPk(req.params.id).then(function(books) {
+    return books.update(req.body);
+  }).then(function(books){
+    res.redirect("/books");    
+  });
+});
+
 // Book details page
 router.get("/details/:id", function(req, res, next){
   Books.findByPk(req.params.id).then(function(books){
@@ -79,6 +88,8 @@ router.get("/details/:id", function(req, res, next){
     });
   });
 });
+
+
 
 // Return book page
 router.get('/return/:id', function(req, res, next) {
