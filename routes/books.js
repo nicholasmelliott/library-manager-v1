@@ -5,6 +5,12 @@ const Books = require("../models").Books;
 const Loans = require("../models").Loans;
 const Patrons = require("../models").Patrons;
 
+const d = new Date()
+const ye = d.getFullYear();
+const mo = d.getMonth() + 1;
+const da = d.getDate();
+const dt = `${ye}-${mo}-${da}`;
+
 // All books page
 router.get('/', function(req, res, next) {
   Books.findAll({order: [["title", "DESC"]]}).then(function(books){
@@ -12,7 +18,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-
+// create new book
 router.get('/new', function(req, res, next) {
   res.render('new_book', {title: "New Book"});
 });
@@ -109,8 +115,17 @@ router.get('/return/:id', function(req, res, next) {
         attributes: ["first_name", "last_name"]
       }
     ]}).then(function(loans){
-      res.render('return_book', {loans: loans, title: "Return Book"});
+      res.render('return_book', {date: dt, loans: loans, title: "Return Book"});
     });
+  });
+});
+
+//Return book
+router.put('/return/:id', function(req, res, next){
+  Loans.findByPk(req.params.id).then(function(loans) {
+    return loans.update(req.body);
+  }).then(function(loans){
+    res.redirect("/loans");    
   });
 });
 

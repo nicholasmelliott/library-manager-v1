@@ -9,7 +9,13 @@ module.exports = (sequelize, DataTypes) => {
     patron_id: DataTypes.INTEGER,
     loaned_on: DataTypes.DATE,
     return_by: DataTypes.DATE,
-    returned_on: DataTypes.DATE
+    returned_on: {
+      type: DataTypes.DATEONLY,
+      validation: {
+        //isDate: true,
+        allowNull: true
+      }
+    }
   }, {
     timestamps: false
   });
