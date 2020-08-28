@@ -88,7 +88,13 @@ input {
   font-size: 14px;
   border-radius: 2px;
   border-color: #E7E7E7;
+  display: inline-block;
 }
 input[type=text], select {
+  margin-left: 10px;
+}
+.err {
+  font-size: 14px;
+  color: red;
   margin-left: 10px;
 }
