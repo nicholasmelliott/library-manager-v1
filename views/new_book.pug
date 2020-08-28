@@ -2,18 +2,30 @@ extends layout
 
 block content
   h1  New Book
-    form
+    form(action="/books/new", method="post")
       p
         label(for='title') Title
-        input#title(type='text')
+        input#title(type='text', name='title', title="Title of book (ex. The Martian)", required)
+        if(err)
+          if(err.errors[0].path === 'title')
+            label(class="err")= err.errors[0].message
       p
         label(for='author') Author
-        input#author(type='text')
+        input#author(type='text', name='author', title="Author of book (ex. Andy Weir)", required)
+        if(err)
+          if(err.errors[0].path === 'author')
+            label(class="err")= err.errors[0].message
       p
         label(for='genre') Genre
-        input#genre(type='text')
+        input#genre(type='text', name='genre', title="Genre of book (ex. Science Fiction)", required)
+        if(err)
+          if(err.errors[0].path === 'genre')
+            label(class="err")= err.errors[0].message
       p
         label(for='first_published') First Published
-        input#first_published(type='text')
+        input#first_published(type='text', name='first_published', title="Year published (ex. 2014)")
+        if(err)
+          if(err.errors[0].path === 'first_published')
+            label(class="err")= err.errors[0].message
       p
         input(type='submit', value='Create New Book')

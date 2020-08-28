@@ -18,9 +18,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
-// create new book
+//new book page
 router.get('/new', function(req, res, next) {
-  res.render('new_book', {title: "New Book"});
+  res.render('new_book', {books: Books.build(), title: "New Book"});
+});
+
+//create new book
+router.post('/new', function(req, res, next) {
+  Books.create(req.body).then(function(books) {
+    res.redirect("/books");
+  }).catch(function(err, books){
+    res.render('new_book', {books: books, err: err, title: "New Book"});
+    console.log(err);
+  });
 });
 
 // Books overdue page
@@ -69,7 +79,9 @@ router.put('/details/:id', function(req, res, next){
     return books.update(req.body);
   }).then(function(books){
     res.redirect("/books");    
-  });
+  }).catch(function(err){
+    console.log(err);
+  });;
 });
 
 // Book details page
