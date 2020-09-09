@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require("sequelize");
+const books = require('../models/books');
 const Books = require("../models").Books;
 const Loans = require("../models").Loans;
 const Patrons = require("../models").Patrons;
@@ -25,10 +26,11 @@ router.get('/new', function(req, res, next) {
 
 //create new book
 router.post('/new', function(req, res, next) {
+  const bodyProp = req.body;
   Books.create(req.body).then(function(books) {
     res.redirect("/books");
-  }).catch(function(err, books){
-    res.render('new_book', {books: books, err: err, title: "New Book"});
+  }).catch(function(err){
+    res.render('new_book', {bodyProp: bodyProp, err: err, title: "New Book"});
     console.log(err);
   });
 });
@@ -75,13 +77,18 @@ router.get('/checked', function(req, res, next) {
 
 //Update book
 router.put('/details/:id', function(req, res, next){
+  //const bodyProp = req.body;
+  //console.log('REQ PARAMS ID: ' + req.params.id);
   Books.findByPk(req.params.id).then(function(books) {
     return books.update(req.body);
   }).then(function(books){
     res.redirect("/books");    
   }).catch(function(err){
-    console.log(err);
-  });;
+      console.log(err);
+      //res.redirect('back');
+      //res.render('book_detail',{books: bodyProp, err: err});
+      
+  });
 });
 
 // Book details page
