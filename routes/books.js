@@ -5,12 +5,8 @@ const books = require('../models/books');
 const Books = require("../models").Books;
 const Loans = require("../models").Loans;
 const Patrons = require("../models").Patrons;
+const dt = require("../time").dt;
 
-const d = new Date()
-const ye = d.getFullYear();
-const mo = d.getMonth() + 1;
-const da = d.getDate();
-const dt = `${ye}-${mo}-${da}`;
 
 // All books page
 router.get('/', function(req, res, next) {

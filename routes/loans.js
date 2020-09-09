@@ -4,6 +4,8 @@ const router = express.Router();
 const { Op } = require("sequelize");
 const Loans = require("../models").Loans;
 const Books = require("../models").Books;
+const Patrons = require("../models").Patrons;
+const dt = require("../time");
 
 // All loans page
 router.get('/', function(req, res, next) {
@@ -21,9 +23,30 @@ router.get('/', function(req, res, next) {
   });
 });
 
-
+// New Loan page
 router.get('/new', function(req, res, next) {
-  res.render('new_loan', {title: "New Loan"});
+  Books.findAll({order: [["title", "DESC"]]}).then(function(books){
+    Patrons.findAll({order: [["last_name", "DESC"]]}).then(function(patrons){
+      res.render('new_loan', {loans: Loans.build(), date: dt, books: books, patrons: patrons, title: 'New Loan' });
+    });
+  });
+});
+
+// Create new loan
+router.post('/new', function(req, res, next) {
+  const bodyProp = req.body;
+  console.log(req.body);
+  Loans.create(req.body).then(function(loans) {
+    res.redirect("/loans");
+  }).catch(function(err){
+    console.log("BOOK ID " + bodyProp.book_id);
+    Books.findAll({order: [["title", "DESC"]]}).then(function(books){
+      Patrons.findAll({order: [["last_name", "DESC"]]}).then(function(patrons){
+        res.render('new_loan', {bodyProp: bodyProp, books: books, patrons: patrons, date: dt, err: err, title: "New Loan"});
+      });
+    });
+    console.log(err);
+  });
 });
 
 // Loans overdue page

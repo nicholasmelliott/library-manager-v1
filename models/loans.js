@@ -3,16 +3,61 @@ module.exports = (sequelize, DataTypes) => {
   const Loans = sequelize.define('Loans', {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    book_id: DataTypes.INTEGER,
-    patron_id: DataTypes.INTEGER,
-    loaned_on: DataTypes.DATE,
-    return_by: DataTypes.DATE,
+    book_id: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isInt: {
+          args: true,
+          msg: "Please select a book."
+        }
+      }
+    },
+    patron_id: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isInt: {
+          args: true,
+          msg: "Please select a patron."
+        }
+      }
+    },
+    loaned_on: {
+      type: DataTypes.DATEONLY,
+        allowNull: false,
+        unique: false,
+        validate: {
+          isDate: {
+            args: true,
+            msg: "Please enter a valid date (ex. 2020-12-31)."
+          },
+          notEmpty: {
+            args: true,
+            msg: "Please enter a date (ex. 2020-12-31)."
+          }  
+        }
+    },
+    return_by: {
+      type: DataTypes.DATEONLY,
+        allowNull: false,
+        unique: false,
+        validate: {
+          isDate: {
+            args: true,
+            msg: "Please enter a valid date (ex. 2020-12-31)."
+          },
+          notEmpty: {
+            args: true,
+            msg: "Please enter a date (ex. 2020-12-31)."
+          }  
+        }
+    },
     returned_on: {
       type: DataTypes.DATEONLY,
       validation: {
-        //isDate: true,
+        isDate: true,
         allowNull: true
       }
     }
