@@ -84,13 +84,26 @@ router.put('/details/:id', function(req, res, next){
   }).then(function(books){
     res.redirect("/books");    
   }).catch(function(err){
-      console.log(err);
-      Books.findByPk(req.params.id).then(function(books) {
-        res.render('book_detail',{bodyProp: bodyProp, books: books, err: err});
-      });
-      //res.redirect('back');
-      
-      
+    console.log(err);
+    Books.findByPk(req.params.id).then(function(books){
+      Loans.findAll({
+        where: {
+          book_id: books.id
+        }, 
+        order: [["book_id", "DESC"]],
+        include: [
+          {
+            association: "books",
+            attributes: ["title"]
+          },
+          {
+          association: "patrons",
+          attributes: ["first_name", "last_name"]
+          }
+        ]}).then(function(loans){
+          res.render('book_detail',{bodyProp: bodyProp, loans: loans, books: books, err: err});
+        });
+    });
   });
 });
 

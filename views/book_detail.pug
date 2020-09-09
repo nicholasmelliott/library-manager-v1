@@ -40,16 +40,15 @@ block content
         th Returned on
         th Action
     tbody
-      if !err
-        each loan in loans
-          tr
+      each loan in loans
+        tr
+          td
+            a(href=`/books/details/${loan.book_id}`)= loan.books.title
+          td
+            a(href=`/patrons/details/${loan.patron_id}`)= loan.patrons.first_name + " " + loan.patrons.last_name
+          td= loan.loaned_on
+          td= loan.return_by
+          td= loan.returned_on
+          if !loan.returned_on
             td
-              a(href=`/books/details/${loan.book_id}`)= loan.books.title
-            td
-              a(href=`/patrons/details/${loan.patron_id}`)= loan.patrons.first_name + " " + loan.patrons.last_name
-            td= loan.loaned_on
-            td= loan.return_by
-            td= loan.returned_on
-            if !loan.returned_on
-              td
-                a.button(href=`/books/return/${loan.book_id}`) Return Book
+              a.button(href=`/books/return/${loan.book_id}`) Return Book
