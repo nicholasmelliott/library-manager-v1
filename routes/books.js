@@ -77,16 +77,19 @@ router.get('/checked', function(req, res, next) {
 
 //Update book
 router.put('/details/:id', function(req, res, next){
-  //const bodyProp = req.body;
-  //console.log('REQ PARAMS ID: ' + req.params.id);
+  const bodyProp = req.body;
+  console.log('REQ PARAMS ID: ' + req.body.id);
   Books.findByPk(req.params.id).then(function(books) {
     return books.update(req.body);
   }).then(function(books){
     res.redirect("/books");    
   }).catch(function(err){
       console.log(err);
+      Books.findByPk(req.params.id).then(function(books) {
+        res.render('book_detail',{bodyProp: bodyProp, books: books, err: err});
+      });
       //res.redirect('back');
-      //res.render('book_detail',{books: bodyProp, err: err});
+      
       
   });
 });
