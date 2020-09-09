@@ -2,19 +2,31 @@ extends layout
 
 block content
   h1 Book: #{books.title}
-  form(action="/books/details/" + books.id+ "?_method=PUT", method="post")
+  form(action="/books/details/" + books.id + "?_method=PUT", method="post")
     p
       label(for='title') Title
-      input#title(type='text', name='title', value=`${books.title}`)
+      input#title(type='text', name='title', value= err ? bodyProp.title : books.title)
+      if(err)
+          if(err.errors[0].path === 'title')
+            label(class="err")= err.errors[0].message
     p
       label(for='author') Author
-      input#author(type='text', name='author', value=`${books.author}`)
+      input#author(type='text', name='author', value= err ? bodyProp.author : books.author)
+      if(err)
+          if(err.errors[0].path === 'author')
+            label(class="err")= err.errors[0].message
     p
       label(for='genre') Genre
-      input#genre(type='text', name='genre', value=`${books.genre}`)
+      input#genre(type='text', name='genre', value= err ? bodyProp.genre : books.genre)
+      if(err)
+          if(err.errors[0].path === 'genre')
+            label(class="err")= err.errors[0].message
     p
       label(for='first_published') First Published
-      input#first_published(type='text', name='first_published', value=`${books.first_published}`)
+      input#first_published(type='text', name='first_published', value= err ? bodyProp.first_published : books.first_published)
+      if(err)
+          if(err.errors[0].path === 'first_published')
+            label(class="err")= err.errors[0].message
     p
       input(type='submit' value='Update')
   h2 Loan History
@@ -28,15 +40,16 @@ block content
         th Returned on
         th Action
     tbody
-      each loan in loans
-        tr
-          td
-            a(href=`/books/details/${loan.book_id}`)= loan.books.title
-          td
-            a(href=`/patrons/details/${loan.patron_id}`)= loan.patrons.first_name + " " + loan.patrons.last_name
-          td= loan.loaned_on
-          td= loan.return_by
-          td= loan.returned_on
-          if !loan.returned_on
+      if !err
+        each loan in loans
+          tr
             td
-              a.button(href=`/books/return/${loan.book_id}`) Return Book
+              a(href=`/books/details/${loan.book_id}`)= loan.books.title
+            td
+              a(href=`/patrons/details/${loan.patron_id}`)= loan.patrons.first_name + " " + loan.patrons.last_name
+            td= loan.loaned_on
+            td= loan.return_by
+            td= loan.returned_on
+            if !loan.returned_on
+              td
+                a.button(href=`/books/return/${loan.book_id}`) Return Book
