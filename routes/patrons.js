@@ -14,7 +14,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/new', function(req, res, next) {
-  res.render('new_patron', {title: "New Patron"});
+  res.render('new_patron', {patrons: Patrons.build(), title: "New Patron"});
+});
+
+router.post('/new', function(req, res, next){
+  const bodyProp = req.body;
+  Patrons.create(req.body).then(function(patrons) {
+    res.redirect("/patrons");
+  }).catch(function(err){
+    res.render('new_patron', {bodyProp: bodyProp, err: err, title: "New Patron"});
+  });
 });
 
 router.get("/details/:id", function(req, res, next){
