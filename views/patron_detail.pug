@@ -2,25 +2,43 @@ extends layout
 
 block content
   h1= "Patron:" + patrons.first_name + " " + patrons.last_name
-  form
+  form(action="/patrons/details/" + patrons.id + "?_method=PUT", method="post")
     p
       label(for='first_name') First Name
-      input#first_name(type='text', value=`${patrons.first_name}`)
+      input#first_name(type='text', name='first_name', value= err ? bodyProp.first_name : patrons.first_name)
+      if(err)
+          if(err.errors[0].path === 'first_name')
+            label(class="err")= err.errors[0].message
     p
       label(for='last_name') Last Name
-      input#last_name(type='text', value=`${patrons.last_name}`)
+      input#last_name(type='text', name='last_name', value= err ? bodyProp.last_name : patrons.last_name)
+      if(err)
+          if(err.errors[0].path === 'last_name')
+            label(class="err")= err.errors[0].message
     p
       label(for='address')  Address
-      input#address(type='text', value=`${patrons.address}`)
+      input#address(type='text', name='address', value= err ? bodyProp.address : patrons.address)
+      if(err)
+          if(err.errors[0].path === 'address')
+            label(class="err")= err.errors[0].message
     p
       label(for='email') Email
-      input#email(type='text', value=`${patrons.email}`)
+      input#email(type='text', name='email', value= err ? bodyProp.email : patrons.email)
+      if(err)
+          if(err.errors[0].path === 'email')
+            label(class="err")= err.errors[0].message
     p
       label(for='library_id') Library ID
-      input#library_id(type='text', value=`${patrons.library_id}`)
+      input#library_id(type='text', name='library_id', value= err ? bodyProp.library_id : patrons.library_id)
+      if(err)
+          if(err.errors[0].path === 'library_id')
+            label(class="err")= err.errors[0].message
     p
       label(for='zip_code') Zip Code
-      input#zip_code(type='text', value=`${patrons.zip_code}`)
+      input#zip_code(type='text', name='zip_code', value= err ? bodyProp.zip_code : patrons.zip_code)
+      if(err)
+          if(err.errors[0].path === 'zip_code')
+            label(class="err")= err.errors[0].message
     p
       input(type='submit', value='Update')
   h2 Loan History
