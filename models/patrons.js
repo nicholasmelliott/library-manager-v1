@@ -41,7 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: false,
+      unique: {
+        msg: "This email address is already in use. Please provide another."
+      },
       validate: {
         notEmpty: {
           args: true,
@@ -57,7 +59,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: {
-        args: true,
         msg: "The library id is a duplicate. Please enter a different one."
       },
       validate: {
@@ -77,11 +78,16 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        unique: true, 
+        fields: ["email", "library_id"]
+      }
+    ]
   });
   Patrons.associate = function(models) {
     // associations can be defined here
-    
   };
   return Patrons;
 };
