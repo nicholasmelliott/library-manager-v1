@@ -56,9 +56,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     returned_on: {
       type: DataTypes.DATEONLY,
-      validation: {
-        isDate: true,
-        allowNull: true
+      allowNull: true,
+      validate: {
+        isDate: {
+          args: true,
+          msg: "Please enter a valid date (ex. 2020-12-31)"
+        },
+        notEmpty: {
+          args: true,
+          msg: "Please enter a return date (ex. 2020-12-31)."
+        },
       }
     }
   }, {

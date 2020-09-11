@@ -18,6 +18,9 @@ block content
     form(action="/books/return/" + loan.id + "?_method=PUT", method="post")
       p
         label(for='returned_on') Returned on:
-        input#returned_on(type='text', name='returned_on', value=date required)
+        input#returned_on(type='text', name='returned_on', value= err ? bodyProp.returned_on : date)
+        if(err)
+          if(err.errors[0].path === 'returned_on')
+            label(class="err")= err.errors[0].message
       p
         input(type='submit', value='Return Book')

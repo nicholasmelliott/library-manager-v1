@@ -8,19 +8,19 @@ const Patrons = require("../models").Patrons;
 const dt = require("../time").dt;
 
 
-// All books page
+// All Books page
 router.get('/', function(req, res, next) {
   Books.findAll({order: [["title", "DESC"]]}).then(function(books){
     res.render('all_books', {books: books, title: 'Books' });
   });
 });
 
-//new book page
+// New Book page
 router.get('/new', function(req, res, next) {
   res.render('new_book', {books: Books.build(), title: "New Book"});
 });
 
-//create new book
+// Create New Book
 router.post('/new', function(req, res, next) {
   const bodyProp = req.body;
   Books.create(req.body).then(function(books) {
@@ -31,7 +31,7 @@ router.post('/new', function(req, res, next) {
   });
 });
 
-// Books overdue page
+// Books Overdue page
 router.get('/overdue', function(req, res, next) {
   Loans.findAll({
     where: {
@@ -51,7 +51,7 @@ router.get('/overdue', function(req, res, next) {
   });
 });
 
-// Books checked out page
+// Books Checked Out page
 router.get('/checked', function(req, res, next) {
   Loans.findAll({
     where: {
@@ -71,7 +71,7 @@ router.get('/checked', function(req, res, next) {
   });
 });
 
-//Update book
+//Update Book
 router.put('/details/:id', function(req, res, next){
   const bodyProp = req.body;
   console.log('REQ PARAMS ID: ' + req.body.id);
@@ -103,7 +103,7 @@ router.put('/details/:id', function(req, res, next){
   });
 });
 
-// Book details page
+// Book Details page
 router.get("/details/:id", function(req, res, next){
   Books.findByPk(req.params.id).then(function(books){
     Loans.findAll({
@@ -128,35 +128,53 @@ router.get("/details/:id", function(req, res, next){
 
 
 
-// Return book page
+// Return Book page
 router.get('/return/:id', function(req, res, next) {
-  Books.findByPk(req.params.id).then(function(books){
-    Loans.findAll({
-      where: {
-        book_id: books.id
-      }, 
-      order: [["book_id", "DESC"]],
-      include: [
-      {
-          association: "books",
-          attributes: ["title"]
-      },
-      {
-        association: "patrons",
-        attributes: ["first_name", "last_name"]
-      }
+  Loans.findAll({
+    where: {
+      id: req.params.id
+    },
+    include: [
+    {
+        association: "books",
+        attributes: ["title"]
+    },
+    {
+      association: "patrons",
+      attributes: ["first_name", "last_name"]
+    }
     ]}).then(function(loans){
       res.render('return_book', {date: dt, loans: loans, title: "Return Book"});
-    });
   });
 });
 
-//Return book
+//Return Book
 router.put('/return/:id', function(req, res, next){
+  const bodyProp = req.body;
+  console.log(req.body);
   Loans.findByPk(req.params.id).then(function(loans) {
     return loans.update(req.body);
   }).then(function(loans){
     res.redirect("/loans");    
+  }).catch(function(err){
+    console.log(err);
+    Loans.findAll({
+      where: {
+        id: req.params.id
+      }, 
+      order: [["book_id", "DESC"]],
+      include: [
+        {
+          association: "books",
+          attributes: ["title"]
+        },
+        {
+          association: "patrons",
+          attributes: ["first_name", "last_name"]
+        }
+      ]}).then(function(loans){
+        res.render('return_book', {date: dt, err: err, bodyProp: bodyProp, loans: loans, title: "Return Book"});
+      });
   });
 });
 
