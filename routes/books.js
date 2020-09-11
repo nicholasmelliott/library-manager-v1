@@ -10,7 +10,7 @@ const dt = require("../time").dt;
 
 // All Books page
 router.get('/', function(req, res, next) {
-  Books.findAll({order: [["title", "DESC"]]}).then(function(books){
+  Books.findAll({order: [["title", "ASC"]]}).then(function(books){
     res.render('all_books', {books: books, title: 'Books' });
   });
 });
@@ -40,11 +40,13 @@ router.get('/overdue', function(req, res, next) {
       },
       returned_on: null
     }, 
-    order: [["book_id", "DESC"]],
+    order: [
+      ['books', 'title', 'asc']
+    ],
     include: [
     {
         association: "books",
-        attributes: ["title", "author", "genre", "first_published"]
+        attributes: ["title", "author", "genre", "first_published"],
     }
   ]}).then(function(loans){
     res.render('overdue_books', {loans: loans, title: "Overdue Books"});
@@ -60,7 +62,9 @@ router.get('/checked', function(req, res, next) {
       },
       returned_on: null
     }, 
-    order: [["book_id", "DESC"]],
+    order: [
+      ['books', 'title', 'asc']
+    ],
     include: [
     {
         association: "books",
@@ -74,7 +78,6 @@ router.get('/checked', function(req, res, next) {
 //Update Book
 router.put('/details/:id', function(req, res, next){
   const bodyProp = req.body;
-  console.log('REQ PARAMS ID: ' + req.body.id);
   Books.findByPk(req.params.id).then(function(books) {
     return books.update(req.body);
   }).then(function(books){
@@ -86,7 +89,7 @@ router.put('/details/:id', function(req, res, next){
         where: {
           book_id: books.id
         }, 
-        order: [["book_id", "DESC"]],
+        order: [["loaned_on", "DESC"]],
         include: [
           {
             association: "books",
@@ -110,7 +113,7 @@ router.get("/details/:id", function(req, res, next){
       where: {
         book_id: books.id
       }, 
-      order: [["book_id", "DESC"]],
+      order: [["loaned_on", "DESC"]],
       include: [
       {
           association: "books",
@@ -151,7 +154,6 @@ router.get('/return/:id', function(req, res, next) {
 //Return Book
 router.put('/return/:id', function(req, res, next){
   const bodyProp = req.body;
-  console.log(req.body);
   Loans.findByPk(req.params.id).then(function(loans) {
     return loans.update(req.body);
   }).then(function(loans){
@@ -161,8 +163,7 @@ router.put('/return/:id', function(req, res, next){
     Loans.findAll({
       where: {
         id: req.params.id
-      }, 
-      order: [["book_id", "DESC"]],
+      },
       include: [
         {
           association: "books",

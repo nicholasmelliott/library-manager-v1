@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1= "Patron:" + patrons.first_name + " " + patrons.last_name
+  h1= "Patron: " + patrons.first_name + " " + patrons.last_name
   form(action="/patrons/details/" + patrons.id + "?_method=PUT", method="post")
     p
       label(for='first_name') First Name

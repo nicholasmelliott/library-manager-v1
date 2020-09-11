@@ -9,15 +9,17 @@ const dt = require("../time");
 
 // All loans page
 router.get('/', function(req, res, next) {
-  Loans.findAll({order: [["book_id", "DESC"]], include: [
-    {
+  Loans.findAll({
+    order: [["loaned_on", "DESC"]],
+    include: [
+      {
         association: "books",
         attributes: ["title"]
-    },
-    {
-      association: "patrons",
-      attributes: ["first_name", "last_name"]
-  }
+      },
+      { 
+        association: "patrons",
+        attributes: ["first_name", "last_name"]
+      }
   ]}).then(function(loans){
     res.render('all_loans', {loans: loans, title: 'Loans' });
   });
@@ -25,8 +27,12 @@ router.get('/', function(req, res, next) {
 
 // New Loan Page
 router.get('/new', function(req, res, next) {
-  Books.findAll({order: [["title", "ASC"]]}).then(function(books){
-    Patrons.findAll({order: [["last_name", "ASC"]]}).then(function(patrons){
+  Books.findAll({
+    order: [["title", "ASC"]],
+  }).then(function(books){
+    Patrons.findAll({
+      order: [["last_name", "ASC"]]
+    }).then(function(patrons){
       res.render('new_loan', {loans: Loans.build(), date: dt, books: books, patrons: patrons, title: 'New Loan' });
     });
   });
@@ -38,8 +44,12 @@ router.post('/new', function(req, res, next) {
   Loans.create(req.body).then(function(loans) {
     res.redirect("/loans");
   }).catch(function(err){
-    Books.findAll({order: [["title", "ASC"]]}).then(function(books){
-      Patrons.findAll({order: [["last_name", "ASC"]]}).then(function(patrons){
+    Books.findAll({
+      order: [["title", "ASC"]]
+    }).then(function(books){
+      Patrons.findAll({
+        order: [["last_name", "ASC"]]
+      }).then(function(patrons){
         res.render('new_loan', {bodyProp: bodyProp, books: books, patrons: patrons, date: dt, err: err, title: "New Loan"});
       });
     });
@@ -55,7 +65,7 @@ router.get('/overdue', function(req, res, next) {
       },
       returned_on: null
     }, 
-    order: [["book_id", "DESC"]],
+    order: [["loaned_on", "DESC"]],
     include: [
       {
         association: "books",
@@ -79,7 +89,7 @@ router.get('/checked', function(req, res, next) {
       },
       returned_on: null
     }, 
-    order: [["book_id", "DESC"]],
+    order: [["loaned_on", "DESC"]],
     include: [
     {
       association: "books",

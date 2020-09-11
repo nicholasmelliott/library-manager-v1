@@ -6,7 +6,9 @@ const Loans = require("../models").Loans;
 
 // All Patrons page
 router.get('/', function(req, res, next) {
-  Patrons.findAll({order: [["last_name", "DESC"]]}).then(function(patrons){
+  Patrons.findAll({
+    order: [["last_name", "ASC"]]
+  }).then(function(patrons){
     res.render('all_patrons', {patrons: patrons, title: 'Patrons' });
   });
 });
@@ -40,7 +42,7 @@ router.put('/details/:id', function(req, res, next){
         where: {
           patron_id: patrons.id
         }, 
-        order: [["patron_id", "DESC"]],
+        order: [["loaned_on", "DESC"]],
         include: [
           {
             association: "books",
@@ -64,7 +66,7 @@ router.get("/details/:id", function(req, res, next){
       where: {
         patron_id: patrons.id
       }, 
-      order: [["book_id", "DESC"]],
+      order: [["loaned_on", "DESC"]],
       include: [
       {
           association: "books",
