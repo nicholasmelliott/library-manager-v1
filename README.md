@@ -10,7 +10,7 @@ This is a web application called Library Manager. It provides functionality for 
 - **List Overdue**: View a list of books that are currently overdue.
 - **List Checked Out**: View a list of books that are currently checked out by patrons.
 
-![Animated GIF](./public/images/LibraryManagerBooksExample.gif)
+![Animated GIF](./public/images/LibraryManagerBookExample.gif)
 
 ## Patrons
 - **New Patron**: Add a new patron to the library.
